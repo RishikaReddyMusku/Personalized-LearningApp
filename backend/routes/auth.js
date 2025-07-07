@@ -1,4 +1,3 @@
-// backend/routes/auth.js
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -12,7 +11,6 @@ router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Check if user already exists
     const [existing] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
     if (existing.length > 0) {
       return res.status(409).send({ error: 'User already exists' });
@@ -36,13 +34,14 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const [[user]] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
+    const [users] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
+    const user = users[0];
+
     if (!user) return res.status(404).send({ error: 'User not found' });
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).send({ error: 'Invalid password' });
 
-    // Include has_selected_goal in token
     const token = jwt.sign(
       { id: user.id, hasGoal: user.has_selected_goal },
       process.env.JWT_SECRET,
