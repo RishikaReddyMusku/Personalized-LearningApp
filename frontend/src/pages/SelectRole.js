@@ -39,7 +39,7 @@ const SelectRole = () => {
     console.error('❌ Invalid token:', err.message);
     setError('Invalid session. Please log in again.');
     localStorage.removeItem('token');
-    navigate('/login');
+    navigate('/');
     return;
   }
 
