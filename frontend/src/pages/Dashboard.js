@@ -10,7 +10,7 @@ const Dashboard = () => {
 
   const fetchPath = async (uid, token) => {
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/path/path/${uid}`, {
+      const { data } = await axios.get(`https://personalized-learningapp-production.up.railway.app/api/path/path/${uid}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -36,7 +36,7 @@ const Dashboard = () => {
       setModules(updated);
       updateProgress(updated);
 
-      await axios.post(`http://localhost:5000/api/path/toggle`, {
+      await axios.post(`https://personalized-learningapp-production.up.railway.app/api/path/toggle`, {
         userId,
         moduleId,
         

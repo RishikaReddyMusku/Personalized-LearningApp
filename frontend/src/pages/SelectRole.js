@@ -29,7 +29,7 @@ const SelectRole = () => {
       const userId = decoded.id;
 
       // Generate path for this user with selected goalId
-      await axios.post('http://localhost:5000/api/path/generate', {
+      await axios.post('https://personalized-learningapp-production.up.railway.app/api/path/generate', {
         userId,
         goalId,
       });

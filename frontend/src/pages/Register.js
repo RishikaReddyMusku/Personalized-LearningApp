@@ -14,7 +14,7 @@ const Register = () => {
     e.preventDefault();
     setError('');
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
+      await axios.post('https://personalized-learningapp-production.up.railway.app/api/auth/register', {
         name,
         email,
         password,
