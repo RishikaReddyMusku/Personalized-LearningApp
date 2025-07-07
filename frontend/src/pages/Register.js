@@ -10,20 +10,31 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-      await axios.post('https://personalized-learningapp-production.up.railway.app/api/auth/register', {
-        name,
-        email,
-        password,
-      });
-      navigate('/select-role');
-    } catch (err) {
-      setError('Registration failed. Try again.');
-    }
-  };
+ const handleRegister = async (e) => {
+  e.preventDefault();
+  setError('');
+  try {
+    await axios.post('https://personalized-learningapp-production.up.railway.app/api/auth/register', {
+      name,
+      email,
+      password,
+    });
+
+    // 🔐 Automatically log the user in after registering
+    const loginRes = await axios.post('https://personalized-learningapp-production.up.railway.app/api/auth/login', {
+      email,
+      password,
+    });
+
+    const token = loginRes.data.token;
+    localStorage.setItem('token', token);
+    navigate('/select-role'); // ✅ Go to Select Role
+  } catch (err) {
+    console.error(err);
+    setError('Registration failed. Try again.');
+  }
+};
+
 
   return (
     <div className="form-container">

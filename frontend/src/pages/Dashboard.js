@@ -48,7 +48,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) return;
+    if (!token) return navigate('/');
 
     const decoded = jwtDecode(token);
     setUserId(decoded.id);
