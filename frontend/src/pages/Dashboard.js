@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import '../App.css';
+import { useNavigate } from 'react-router-dom';
+const navigate = useNavigate();
+
 
 const Dashboard = () => {
   const [modules, setModules] = useState([]);
