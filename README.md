@@ -20,7 +20,7 @@ Learnify is an AI-powered full-stack web application that generates customized c
 
 | Frontend              | Backend                | Database     |
 |-----------------------|------------------------|--------------|
-| React.js  | Node.js + Express       | MongoDB Atlas |
+| React.js  | Node.js + Express       | MySQL |
 
 Other tools:  
 - JWT Authentication  
@@ -40,7 +40,7 @@ Other tools:
 
 
 # Clone the repo
-git clone https://github.com/your-username/learnify.git
+git clone https://github.com/RishikaReddyMusku/Personalized-LeraningApp.git
 cd learnify
 
 # Install frontend dependencies
