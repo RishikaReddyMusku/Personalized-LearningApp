@@ -41,7 +41,7 @@ Other tools:
 
 # Clone the repo
 git clone https://github.com/RishikaReddyMusku/Personalized-LeraningApp.git
-cd learnify
+
 
 # Install frontend dependencies
 cd frontend
