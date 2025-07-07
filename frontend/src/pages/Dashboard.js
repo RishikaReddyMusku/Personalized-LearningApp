@@ -3,10 +3,11 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
-const navigate = useNavigate();
+
 
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [modules, setModules] = useState([]);
   const [progress, setProgress] = useState(0);
   const [userId, setUserId] = useState(null);
@@ -49,14 +50,24 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) return navigate('/');
+ useEffect(() => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    navigate('/');
+    return;
+  }
 
+  try {
     const decoded = jwtDecode(token);
     setUserId(decoded.id);
     fetchPath(decoded.id, token);
-  }, []);
+  } catch (err) {
+    console.error('Invalid token:', err.message);
+    localStorage.removeItem('token');
+    navigate('/');
+  }
+}, []);
+
 
   const handleLogout = () => {
     localStorage.removeItem('token');
