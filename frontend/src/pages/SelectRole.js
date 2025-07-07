@@ -28,7 +28,7 @@ const SelectRole = () => {
 
   if (!token) {
     setError('No token found. Please log in again.');
-    navigate('/login');
+    navigate('/');
     return;
   }
 
