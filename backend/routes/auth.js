@@ -47,6 +47,8 @@ router.post('/login', async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
+   console.log('📥 Received login:', req.body); // Check if email/password is present
+   console.log('🔐 JWT Secret:', process.env.JWT_SECRET); // Make sure it's defined
 
     res.send({ token });
   } catch (err) {
