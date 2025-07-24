@@ -14,14 +14,14 @@ const Register = () => {
   e.preventDefault();
   setError('');
   try {
-    await axios.post('https://personalized-learningapp-production.up.railway.app/api/auth/register', {
+    await axios.post('https://personalized-learningapp.onrender.com/api/auth/register', {
       name,
       email,
       password,
     });
 
     // 🔐 Automatically log the user in after registering
-    const loginRes = await axios.post('https://personalized-learningapp-production.up.railway.app/api/auth/login', {
+    const loginRes = await axios.post('https://personalized-learningapp.onrender.com/api/auth/login', {
       email,
       password,
     });

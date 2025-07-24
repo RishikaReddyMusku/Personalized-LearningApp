@@ -16,7 +16,7 @@ const Login = () => {
 
     try {
       // Step 1: Login
-      const res = await axios.post('https://personalized-learningapp-production.up.railway.app/api/auth/login', {
+      const res = await axios.post('https://personalized-learningapp.onrender.com/api/auth/login', {
         email,
         password,
       });
@@ -30,7 +30,7 @@ const Login = () => {
 
       // Step 3: Check if learning path exists
       const pathRes = await axios.get(
-        `https://personalized-learningapp-production.up.railway.app/api/path/path/${userId}`,
+        `https://personalized-learningapp.onrender.com/api/path/path/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
