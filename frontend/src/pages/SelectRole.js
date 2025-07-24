@@ -46,7 +46,7 @@ const SelectRole = () => {
   const userId = decoded.id;
 
   try {
-    await axios.post('https://personalized-learningapp-production.up.railway.app/api/path/generate', {
+    await axios.post('https://personalized-learningapp.onrender.com/api/path/generate', {
       userId,
       goalId,
     });
