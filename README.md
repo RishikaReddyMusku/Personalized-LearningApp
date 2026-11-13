@@ -30,8 +30,7 @@ https://personalized-learning-guide.vercel.app/
 ### Backend:
 - Node.js  
 - Express.js for REST APIs  
-- MySQL with normalized schema:
-  - `users`, `roles`, `modules`, `dependencies`, `progress`  
+- MySQL with normalized schema
 
 ### Authentication:
 - JWT-based secure login and access control  
@@ -42,7 +41,7 @@ https://personalized-learning-guide.vercel.app/
 
 - Frontend: Vercel  
 - Backend: Render  
-- Database: MySQL (cloud-hosted or local)
+- Database: MySQL 
 
 ---
 
