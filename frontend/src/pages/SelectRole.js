@@ -13,10 +13,9 @@ const SelectRole = () => {
     { id: 1, name: 'Full-Stack Developer' },
     { id: 2, name: 'Frontend Developer' },
     { id: 3, name: 'Backend Developer' },
-    { id: 4, name: 'Machine Learning Engineer' },
+    { id: 4, name: 'Data Engineer' },
     { id: 5, name: 'Java Developer' },
-    { id: 6, name: 'Business Analyst' },
-    { id: 7, name: 'Data Scientist' },
+    { id: 6, name: 'ML Engineer' }
   ];
 
   const handleSubmit = async (e) => {
