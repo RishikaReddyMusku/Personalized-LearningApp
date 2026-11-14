@@ -30,7 +30,7 @@ https://personalized-learning-guide.vercel.app/
 ### Backend:
 - Node.js  
 - Express.js for REST APIs  
-- MySQL with normalized schema
+
 
 ### Authentication:
 - JWT-based secure login and access control  
