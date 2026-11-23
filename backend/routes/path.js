@@ -1,7 +1,7 @@
 const express = require('express');
 const db = require('../db');
 const router = express.Router();
-// Get all available learning goals
+
 router.get('/goals', async (req, res) => {
   try {
     const [goals] = await db.execute(
@@ -26,7 +26,6 @@ router.post('/generate', async (req, res) => {
       });
     }
 
-    // Confirm the user exists
     const [users] = await db.execute(
       'SELECT id FROM users WHERE id = ?',
       [userId]
@@ -35,8 +34,6 @@ router.post('/generate', async (req, res) => {
     if (users.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
-
-    // Get modules belonging to the selected goal
     const [modules] = await db.execute(
       `SELECT m.id
        FROM modules m
@@ -52,7 +49,7 @@ router.post('/generate', async (req, res) => {
       });
     }
 
-    // Create the learning path
+   
     const [pathResult] = await db.execute(
       'INSERT INTO learning_paths (user_id, goal_id) VALUES (?, ?)',
       [userId, goalId]
@@ -60,7 +57,6 @@ router.post('/generate', async (req, res) => {
 
     const learningPathId = pathResult.insertId;
 
-    // Add modules to the path
     for (let i = 0; i < modules.length; i++) {
       await db.execute(
         `INSERT INTO path_steps
@@ -89,7 +85,6 @@ router.post('/generate', async (req, res) => {
   }
 });
 
-// Toggle module completion
 router.post('/toggle', async (req, res) => {
   try {
     const userId = Number(req.body.userId);
@@ -154,7 +149,6 @@ router.post('/toggle', async (req, res) => {
   }
 });
 
-// Get the latest learning path for a user
 router.get('/path/:userId', async (req, res) => {
   try {
     const userId = Number(req.params.userId);

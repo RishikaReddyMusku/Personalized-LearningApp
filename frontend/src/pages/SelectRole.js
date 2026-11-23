@@ -14,7 +14,6 @@ const SelectRole = () => {
 
   const navigate = useNavigate();
 
-  // Fetch goals from the database through the backend API
   useEffect(() => {
     const fetchGoals = async () => {
       try {

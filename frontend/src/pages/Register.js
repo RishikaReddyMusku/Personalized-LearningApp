@@ -20,7 +20,7 @@ const Register = () => {
       password,
     });
 
-    // 🔐 Automatically log the user in after registering
+    
     const loginRes = await axios.post('https://personalized-learningapp.onrender.com/api/auth/login', {
       email,
       password,
@@ -28,7 +28,7 @@ const Register = () => {
 
     const token = loginRes.data.token;
     localStorage.setItem('token', token);
-    navigate('/select-role'); // ✅ Go to Select Role
+    navigate('/select-role'); 
   } catch (err) {
     console.error(err);
     setError('Registration failed. Try again.');

@@ -1,21 +1,26 @@
 # Personalized Learning Path Generator
 
-A full-stack web application that generates personalized learning paths for career growth based on user preferences, completed modules, and role-based recommendations. The system supports real-time progress tracking and dependency-aware learning flow.
+A full-stack web application that helps users choose career goals and generate personalized learning paths. It provides curated learning resources, module completion tracking, and a dashboard to monitor learning progress.
 
 ---
 
 ## Live App  
 https://personalized-learning-guide.vercel.app/
 
+
 ---
 
 ## Features
 
-- Personalized learning path recommendations based on user profiles and goals  
-- Role-based authentication with JWT  
-- Dependency-aware module progression  
-- Real-time progress tracking dashboard  
-- Modular, scalable architecture with relational data design  
+-Personalized learning paths based on selected career goals
+
+-Secure user authentication using JWT
+
+-Curated learning resources for different career paths
+
+-Module completion and progress tracking
+
+-Dynamic career goal selection
 
 ---
 
@@ -41,7 +46,7 @@ https://personalized-learning-guide.vercel.app/
 
 - Frontend: Vercel  
 - Backend: Render  
-- Database: MySQL 
+- Database: TiDB Cloud
 
 ---
 

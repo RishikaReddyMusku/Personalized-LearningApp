@@ -15,7 +15,7 @@ const Login = () => {
     setError('');
 
     try {
-      // Step 1: Login
+     
       const res = await axios.post('https://personalized-learningapp.onrender.com/api/auth/login', {
         email,
         password,
@@ -24,11 +24,10 @@ const Login = () => {
       const token = res.data.token;
       localStorage.setItem('token', token);
 
-      // Step 2: Decode token to get userId
       const decoded = jwtDecode(token);
       const userId = decoded.id;
 
-      // Step 3: Check if learning path exists
+      
       const pathRes = await axios.get(
         `https://personalized-learningapp.onrender.com/api/path/path/${userId}`,
         {
@@ -38,7 +37,6 @@ const Login = () => {
         }
       );
 
-      // Step 4: Redirect accordingly
       if (pathRes.data.length === 0) {
         navigate('/select-role');
       } else {
