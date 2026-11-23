@@ -1,158 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import axios from 'axios';
-// import { jwtDecode } from 'jwt-decode';
-// import '../App.css';
-
-
-
-
-// const Dashboard = () => {
-//   const navigate = useNavigate();
-//   const [modules, setModules] = useState([]);
-//   const [progress, setProgress] = useState(0);
-//   const [userId, setUserId] = useState(null);
-
-//   const fetchPath = async (uid, token) => {
-//     try {
-//       const { data } = await axios.get(`https://personalized-learningapp.onrender.com/api/path/path/${uid}`, {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       });
-//       setModules(data);
-//       updateProgress(data);
-//     } catch (err) {
-//       console.error('Error fetching path:', err);
-//     }
-//   };
-
-//   const updateProgress = (moduleList) => {
-//     const completed = moduleList.filter((m) => m.is_completed).length;
-//     const pct = Math.floor((completed / moduleList.length) * 100);
-//     setProgress(pct);
-//   };
-
-//   const toggleComplete = async (moduleId) => {
-//     try {
-//       const updated = modules.map((mod) =>
-//         mod.id === moduleId ? { ...mod, is_completed: !mod.is_completed } : mod
-//       );
-//       setModules(updated);
-//       updateProgress(updated);
-
-//       await axios.post(`https://personalized-learningapp.onrender.com/api/path/toggle`, {
-//         userId,
-//         moduleId,
-        
-//       });
-//     } catch (err) {
-//       console.error('Error updating module status:', err);
-//     }
-//   };
-
-//  useEffect(() => {
-//   const loadLearningPath = async () => {
-//     const token = localStorage.getItem('token');
-
-//     if (!token) {
-//       navigate('/');
-//       return;
-//     }
-
-//     try {
-//       const decoded = jwtDecode(token);
-
-//       setUserId(decoded.id);
-
-//       const { data } = await axios.get(
-//         `https://personalized-learningapp.onrender.com/api/path/path/${decoded.id}`,
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//         }
-//       );
-
-//       setModules(data);
-
-//       const completed = data.filter(
-//         (module) => module.is_completed
-//       ).length;
-
-//       const percentage = data.length
-//         ? Math.floor((completed / data.length) * 100)
-//         : 0;
-
-//       setProgress(percentage);
-
-//     } catch (err) {
-//       console.error('Error loading learning path:', err);
-
-//       if (err.name === 'InvalidTokenError') {
-//         localStorage.removeItem('token');
-//         navigate('/');
-//       }
-//     }
-//   };
-
-//   loadLearningPath();
-
-// }, [navigate]);
-
-//   const handleLogout = () => {
-//     localStorage.removeItem('token');
-//     window.location.href = '/';
-//   };
-
-//   return (
-//     <div className="app-container">
-  
-
-
-//        <button className="logout-btn" onClick={handleLogout}>Logout</button>
-
-//       <h2 style={{ textAlign: 'center' }}>Your Learning Path</h2>
-//       <div className="progress-bar">
-//         <div className="progress-fill" style={{ width: `${progress}%` }}></div>
-//       </div>
-//       <p style={{ textAlign: 'center', marginBottom: '2rem' }}>{progress}% completed</p>
-
-//       {modules.map((mod, idx) =>(
-        
-//         <div className={`module-card ${mod.is_completed ? 'completed' : ''}`} key={mod.id}>
-//           <div className="module-title">
-//             <input
-//               type="checkbox"
-//               checked={mod.is_completed}
-//               onChange={() => toggleComplete(mod.id)}
-//               style={{ marginRight: '10px' }}
-//             />
-//             <span>{mod.title || 'Untitled Module'}</span>
-//           </div>
-//           <a
-//             className="module-link"
-//             href={
-//     mod.content_link
-//       ? mod.content_link.startsWith('http')
-//         ? mod.content_link
-//         : `https://${mod.content_link}`
-//       : '#'
-//   }
-//             target="_blank"
-//             rel="noopener noreferrer"
-//           >
-//             View Resource ↗
-//           </a>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default Dashboard;
-
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -161,13 +6,19 @@ import '../App.css';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+
   const [modules, setModules] = useState([]);
   const [progress, setProgress] = useState(0);
   const [userId, setUserId] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const updateProgress = useCallback((moduleList) => {
     const completed = moduleList.filter(
-      (module) => module.is_completed
+      (module) =>
+        module.is_completed === true ||
+        module.is_completed === 1 ||
+        module.is_completed === '1'
     ).length;
 
     const percentage = moduleList.length
@@ -176,26 +27,6 @@ const Dashboard = () => {
 
     setProgress(percentage);
   }, []);
-
-  const toggleComplete = async (moduleId) => {
-    try {
-      const updated = modules.map((mod) =>
-        mod.id === moduleId
-          ? { ...mod, is_completed: !mod.is_completed }
-          : mod
-      );
-
-      setModules(updated);
-      updateProgress(updated);
-
-      await api.post('/api/path/toggle', {
-        userId,
-        moduleId,
-      });
-    } catch (err) {
-      console.error('Error updating module status:', err);
-    }
-  };
 
   useEffect(() => {
     const loadLearningPath = async () => {
@@ -208,15 +39,28 @@ const Dashboard = () => {
 
       try {
         const decoded = jwtDecode(token);
+        const currentUserId = decoded.id;
 
-        setUserId(decoded.id);
+        setUserId(currentUserId);
 
-        const { data } = await api.get(
-          `/api/path/path/${decoded.id}`
+        const response = await api.get(
+          `/api/path/path/${currentUserId}`
         );
 
-        setModules(data);
-        updateProgress(data);
+        console.log('Learning path response:', response.data);
+
+        const receivedModules = Array.isArray(response.data)
+          ? response.data
+          : [];
+
+        setModules(receivedModules);
+        updateProgress(receivedModules);
+
+        if (receivedModules.length === 0) {
+          setError('No modules found. Please select your learning goal again.');
+        } else {
+          setError('');
+        }
 
       } catch (err) {
         console.error('Error loading learning path:', err);
@@ -228,17 +72,62 @@ const Dashboard = () => {
         ) {
           localStorage.removeItem('token');
           navigate('/');
+        } else {
+          setError(
+            err.response?.data?.error ||
+            'Could not load your learning path.'
+          );
         }
+      } finally {
+        setLoading(false);
       }
     };
 
     loadLearningPath();
   }, [navigate, updateProgress]);
 
+  const toggleComplete = async (moduleId) => {
+    const previousModules = [...modules];
+
+    const updatedModules = modules.map((module) =>
+      Number(module.module_id) === Number(moduleId)
+        ? {
+            ...module,
+            is_completed: !(
+              module.is_completed === true ||
+              module.is_completed === 1 ||
+              module.is_completed === '1'
+            )
+          }
+        : module
+    );
+
+    setModules(updatedModules);
+    updateProgress(updatedModules);
+
+    try {
+      await api.post('/api/path/toggle', {
+        userId,
+        moduleId: Number(moduleId)
+      });
+    } catch (err) {
+      console.error('Error updating module status:', err);
+
+      setModules(previousModules);
+      updateProgress(previousModules);
+
+      alert('Could not update module progress. Please try again.');
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('token');
-    window.location.href = '/';
+    navigate('/');
   };
+
+  if (loading) {
+    return <div className="app-container">Loading your learning path...</div>;
+  }
 
   return (
     <div className="app-container">
@@ -246,45 +135,59 @@ const Dashboard = () => {
         Logout
       </button>
 
-      <h2 style={{ textAlign: 'center' }}>
-        Your Learning Path
-      </h2>
+      <h2 style={{ textAlign: 'center' }}>Your Learning Path</h2>
 
       <div className="progress-bar">
         <div
           className="progress-fill"
           style={{ width: `${progress}%` }}
-        ></div>
+        />
       </div>
 
       <p style={{ textAlign: 'center', marginBottom: '2rem' }}>
         {progress}% completed
       </p>
 
+      {error && (
+        <p style={{ color: 'red', textAlign: 'center' }}>
+          {error}
+        </p>
+      )}
+
       {modules.map((mod) => (
         <div
-          className={`module-card ${mod.is_completed ? 'completed' : ''}`}
+          className={`module-card ${
+            mod.is_completed ? 'completed' : ''
+          }`}
           key={mod.id}
         >
           <div className="module-title">
             <input
               type="checkbox"
-              checked={Boolean(mod.is_completed)}
-              onChange={() => toggleComplete(mod.id)}
+              checked={
+                mod.is_completed === true ||
+                mod.is_completed === 1 ||
+                mod.is_completed === '1'
+              }
+              onChange={() => toggleComplete(mod.module_id)}
               style={{ marginRight: '10px' }}
             />
 
-            <span>{mod.name || 'Untitled Module'}</span>
+            <span>{mod.title || 'Module name missing'}</span>
           </div>
 
-          <a
-            className="module-link"
-            href={mod.content || '#'}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View Resource ↗
-          </a>
+          {mod.content_link ? (
+            <a
+              className="module-link"
+              href={mod.content_link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Resource ↗
+            </a>
+          ) : (
+            <span>Resource link not available</span>
+          )}
         </div>
       ))}
     </div>

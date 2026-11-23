@@ -44,7 +44,7 @@ const SelectRole = () => {
   try {
     await axios.post('https://personalized-learningapp.onrender.com/api/path/generate', {
       userId,
-      goalId,
+      goalId: Number(goalId),
     });
 
     navigate('/dashboard');

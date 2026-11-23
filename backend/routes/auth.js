@@ -1,3 +1,4 @@
+
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -11,21 +12,39 @@ router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const [existing] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        error: 'Name, email and password are required'
+      });
+    }
+
+    const [existing] = await db.execute(
+      'SELECT id FROM users WHERE email = ?',
+      [email]
+    );
+
     if (existing.length > 0) {
-      return res.status(409).send({ error: 'User already exists' });
+      return res.status(409).json({
+        error: 'User already exists'
+      });
     }
 
     const hashed = await bcrypt.hash(password, 10);
+
     await db.execute(
       'INSERT INTO users (name, email, password, has_selected_goal) VALUES (?, ?, ?, ?)',
       [name, email, hashed, false]
     );
 
-    res.send({ message: 'User registered' });
+    res.status(201).json({
+      message: 'User registered'
+    });
+
   } catch (err) {
-    console.error('❌ Registration Error:', err.message);
-    res.status(500).send({ error: 'Registration failed' });
+    console.error('Registration Error:', err.message);
+    res.status(500).json({
+      error: 'Registration failed'
+    });
   }
 });
 
@@ -34,26 +53,56 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const [users] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
+    if (!email || !password) {
+      return res.status(400).json({
+        error: 'Email and password are required'
+      });
+    }
+
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is not configured');
+    }
+
+    const [users] = await db.execute(
+      'SELECT * FROM users WHERE email = ?',
+      [email]
+    );
+
     const user = users[0];
 
-    if (!user) return res.status(404).send({ error: 'User not found' });
+    if (!user) {
+      return res.status(404).json({
+        error: 'User not found'
+      });
+    }
 
-    const valid = await bcrypt.compare(password, user.password);
-    if (!valid) return res.status(401).send({ error: 'Invalid password' });
+    const valid = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    if (!valid) {
+      return res.status(401).json({
+        error: 'Invalid password'
+      });
+    }
 
     const token = jwt.sign(
-      { id: user.id, hasGoal: user.has_selected_goal },
+      {
+        id: user.id,
+        hasGoal: user.has_selected_goal
+      },
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
-   console.log('📥 Received login:', req.body); // Check if email/password is present
-   console.log('🔐 JWT Secret:', process.env.JWT_SECRET); // Make sure it's defined
 
-    res.send({ token });
+    res.json({ token });
+
   } catch (err) {
-    console.error('❌ Login Error:', err.message);
-    res.status(500).send({ error: 'Login failed' });
+    console.error('Login Error:', err.message);
+    res.status(500).json({
+      error: 'Login failed'
+    });
   }
 });
 
