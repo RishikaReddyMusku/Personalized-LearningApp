@@ -12,16 +12,19 @@ const pathRoutes = require('./routes/path');
 async function testDBConnection() {
   try {
     const connection = await pool.getConnection();
-    console.log('✅ Connected to freesqldatabase MySQL!');
+    console.log('Connected to database');
     connection.release();
   } catch (error) {
-    console.error('❌ MySQL connection failed:', error.message);
+    console.error('MySQL connection failed:', error.message);
   }
 }
 testDBConnection();
 
 app.use('/api/auth', authRoutes);
 app.use('/api/path', pathRoutes);
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Backend is running the latest code!' });
+});
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

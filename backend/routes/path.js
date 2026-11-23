@@ -1,8 +1,19 @@
 const express = require('express');
 const db = require('../db');
 const router = express.Router();
+// Get all available learning goals
+router.get('/goals', async (req, res) => {
+  try {
+    const [goals] = await db.execute(
+      'SELECT id, name, description FROM goals ORDER BY id'
+    );
 
-// Generate a learning path
+    res.json(goals);
+  } catch (error) {
+    console.error('Error fetching goals:', error);
+    res.status(500).json({ message: 'Failed to fetch goals' });
+  }
+});
 router.post('/generate', async (req, res) => {
   try {
     const userId = Number(req.body.userId);
