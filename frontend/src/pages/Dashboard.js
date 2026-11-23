@@ -152,7 +152,8 @@
 
 // export default Dashboard;
 
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import api from '../api';
@@ -164,7 +165,7 @@ const Dashboard = () => {
   const [progress, setProgress] = useState(0);
   const [userId, setUserId] = useState(null);
 
-  const updateProgress = (moduleList) => {
+  const updateProgress = useCallback((moduleList) => {
     const completed = moduleList.filter(
       (module) => module.is_completed
     ).length;
@@ -174,7 +175,7 @@ const Dashboard = () => {
       : 0;
 
     setProgress(percentage);
-  };
+  }, []);
 
   const toggleComplete = async (moduleId) => {
     try {
@@ -232,7 +233,7 @@ const Dashboard = () => {
     };
 
     loadLearningPath();
-  }, [navigate]);
+  }, [navigate, updateProgress]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -241,7 +242,6 @@ const Dashboard = () => {
 
   return (
     <div className="app-container">
-
       <button className="logout-btn" onClick={handleLogout}>
         Logout
       </button>
@@ -274,8 +274,7 @@ const Dashboard = () => {
               style={{ marginRight: '10px' }}
             />
 
-            
-          <span>{mod.name || 'Untitled Module'}</span>
+            <span>{mod.name || 'Untitled Module'}</span>
           </div>
 
           <a
