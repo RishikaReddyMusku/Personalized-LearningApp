@@ -274,18 +274,13 @@ const Dashboard = () => {
               style={{ marginRight: '10px' }}
             />
 
-            <span>{mod.title || 'Untitled Module'}</span>
+            
+          <span>{mod.name || 'Untitled Module'}</span>
           </div>
 
           <a
             className="module-link"
-            href={
-              mod.content_link
-                ? mod.content_link.startsWith('http')
-                  ? mod.content_link
-                  : `https://${mod.content_link}`
-                : '#'
-            }
+            href={mod.content || '#'}
             target="_blank"
             rel="noopener noreferrer"
           >

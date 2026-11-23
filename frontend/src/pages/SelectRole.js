@@ -10,13 +10,10 @@ const SelectRole = () => {
   const navigate = useNavigate();
 
   const roles = [
-    { id: 1, name: 'Full-Stack Developer' },
-    { id: 2, name: 'Frontend Developer' },
-    { id: 3, name: 'Backend Developer' },
-    { id: 4, name: 'Data Engineer' },
-    { id: 5, name: 'Java Developer' },
-    { id: 6, name: 'ML Engineer' }
-  ];
+  { id: 1, name: 'Web Development' },
+  { id: 2, name: 'Data Science' },
+  { id: 3, name: 'Artificial Intelligence' }
+];
 
   const handleSubmit = async (e) => {
   e.preventDefault();
